@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Dog Breed Camera</string>
+    <string name="tap_to_open_camera">Tap to open camera</string>
+    <string name="warning_experimental_app">*This is experimental, it might not provide 100% accuracy or give incorrect data.</string>
+</resources>
