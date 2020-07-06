@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="imageAnalyzerBinding"
+            type="com.puntogris.dogbreedcamera.utils.ImageAnalyzer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,21 +14,22 @@
         android:layout_height="match_parent"
         tools:context=".ui.CameraFragment">
 
-
-
         <androidx.camera.view.PreviewView
             android:id="@+id/viewFinder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-        </androidx.camera.view.PreviewView>
+            android:layout_height="match_parent"/>
 
         <TextView
             android:id="@+id/dogBreed"
-            android:layout_width="wrap_content"
+            android:background="@drawable/background_round_corrners"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="30sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textAlignment="center"
+            getDataWithoutNull="@{String.valueOf(imageAnalyzerBinding.dogBreedResult)}"
+            android:textColor="@android:color/white"
+            android:textSize="27sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

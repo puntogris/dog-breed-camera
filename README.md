@@ -16,7 +16,7 @@ Used:
 
 For making predictions with python, keep in mind the model takes 224 x 224 images with 3 RGB Channels.
 ```python
-#here is how i resized it with cv2, you can use do it how you prefer
+#here is how i resized it with cv2, you can do it how you prefer
 img = cv2.imread(IMAGE_PATH)
 resized_img = cv2.resize(img, (224, 224)).astype(np.float32)
 final_img = new_img / 255.
