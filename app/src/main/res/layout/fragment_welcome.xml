@@ -11,53 +11,69 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/welcomeLayout"
-        android:onClick="@{()-> welcomeFragment.requestCameraPermission()}"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:onClick="@{()-> welcomeFragment.requestCameraPermission()}"
         tools:context=".ui.WelcomeFragment">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/welcomeFragmentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="110dp"
-            android:text="@string/app_name"
             android:fontFamily="sans-serif-light"
-            android:textSize="30sp"
+            android:text="@string/app_name"
             android:textColor="@android:color/white"
+            android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/warningMessage"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20sp"
             android:layout_marginEnd="20sp"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
-            android:textSize="16sp"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
             android:fontFamily="sans-serif-light"
             android:text="@string/warning_experimental_app"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/openCameraTap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:textColor="@color/colorAccent"
             android:fontFamily="sans-serif-medium"
             android:text="@string/tap_to_open_camera"
-            app:layout_constraintBottom_toTopOf="@+id/textView2"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/colorAccent"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/warningMessage"
+            app:layout_constraintEnd_toStartOf="@+id/dogPawnImage"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/welcomeFragmentTitle"
+            app:layout_constraintVertical_bias="0.477" />
+
+        <ImageView
+            android:id="@+id/dogPawnImage"
+            android:layout_width="51dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/openCameraTap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/openCameraTap"
+            app:layout_constraintTop_toTopOf="@+id/openCameraTap"
+            app:srcCompat="@drawable/ic_dog_pawn" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

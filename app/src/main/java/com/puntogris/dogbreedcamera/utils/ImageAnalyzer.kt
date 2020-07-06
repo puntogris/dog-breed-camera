@@ -45,9 +45,8 @@ class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
                 }
                 .addOnSuccessListener { listDetectedObjects ->
                     for (detectedObject in listDetectedObjects){
-                       detectedObject.labels[0]?.let { label ->
-                           _dogBreedResult.value = label.text
-                       }
+                        if (detectedObject.labels.isNotEmpty())
+                            _dogBreedResult.value = detectedObject.labels[0].text
                     }
                 }.addOnCompleteListener{
                     imageProxy.close()
