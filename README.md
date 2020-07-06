@@ -1,9 +1,11 @@
 # dog breed camera
-Camera app that detects the breed of a dog.
+Android camera app that detects the breed of a dog.
 
-## ML model
+## Machine Learning model
 
 Model based in 120 breed of dogs trained over 150 epochs, includes metada and its converted to Tflite to use in android.
+
+Used:
 
   * Python
   * TensorFlow
@@ -22,7 +24,7 @@ output = make_prediction(final_img)
 ```
 
 ## Android app
-Used in this project:
+Used:
 
   * Kotlin
   * MVVM
