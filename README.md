@@ -31,5 +31,5 @@ Used:
   * CameraX
 
 ## Screenshots
-![N|Solid](todo)
-![N|Solid](todo)
+![N|Solid](https://github.com/puntogris/dog-breed-camera/blob/master/screenshots/1.png)
+![N|Solid](https://github.com/puntogris/dog-breed-camera/blob/master/screenshots/2.png)
