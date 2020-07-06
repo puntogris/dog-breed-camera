@@ -29,6 +29,7 @@ Used:
   * Kotlin
   * MVVM
   * CameraX
+  * Hilt DI
 
 ## Screenshots
 ![N|Solid](https://github.com/puntogris/dog-breed-camera/blob/master/screenshots/1.png)
