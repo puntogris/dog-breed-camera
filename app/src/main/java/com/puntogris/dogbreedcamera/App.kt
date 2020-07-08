@@ -1,4 +1,4 @@
-package com.puntogris.dogbreedcamera.di
+package com.puntogris.dogbreedcamera
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

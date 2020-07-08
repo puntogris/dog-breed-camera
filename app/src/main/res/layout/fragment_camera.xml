@@ -28,14 +28,23 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:textAlignment="center"
-            getDataWithoutNull="@{String.valueOf(imageAnalyzerBinding.dogBreedResult)}"
             android:textColor="@android:color/white"
             android:textSize="27sp"
+            getDataWithoutNull="@{String.valueOf(imageAnalyzerBinding.dogBreedResult)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/viewFinder"
             app:layout_constraintVertical_bias="1.0" />
+
+        <com.puntogris.dogbreedcamera.utils.Overlay
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

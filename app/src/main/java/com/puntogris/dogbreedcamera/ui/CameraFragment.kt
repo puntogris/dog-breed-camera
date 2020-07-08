@@ -12,23 +12,22 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.puntogris.dogbreedcamera.utils.ImageAnalyzer
 import com.puntogris.dogbreedcamera.R
 import com.puntogris.dogbreedcamera.databinding.FragmentCameraBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.inject.Inject
-import kotlin.math.ln
 
 @AndroidEntryPoint
 class CameraFragment : Fragment() {
     private lateinit var binding: FragmentCameraBinding
-    private var preview: Preview? = null
-    private var camera: Camera? = null
+    private lateinit var preview: Preview
+    private lateinit var camera: Camera
     private lateinit var cameraExecutor: ExecutorService
-    @Inject lateinit var imageAnalyzer: ImageAnalyzer
+    @Inject lateinit var imageAnalyzer : ImageAnalyzer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +40,10 @@ class CameraFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             imageAnalyzerBinding = imageAnalyzer
         }
+        imageAnalyzer.rectOverlayAnalyzer.observe(viewLifecycleOwner, Observer {rect ->
+            rect?.let{ binding.view.updateOverlay(it)}
+        })
+
         return binding.root
     }
 
@@ -54,49 +57,27 @@ class CameraFragment : Fragment() {
                 .build()
 
             val metrics = DisplayMetrics().also { binding.viewFinder.display.getRealMetrics(it) }
-            val screenAspectRatio = aspectRatio(metrics.widthPixels, metrics.heightPixels)
             val rotation = binding.viewFinder.display.rotation
 
-            ImageAnalysis.Builder()
-                .setTargetAspectRatio(screenAspectRatio)
-                .setTargetRotation(rotation)
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-
             val imageAnalysis = ImageAnalysis.Builder()
-                .setTargetResolution(Size(1280, 720))
+                .setTargetRotation(rotation)
+                .setTargetResolution(Size(metrics.widthPixels, metrics.heightPixels))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
+                .also { it.setAnalyzer(cameraExecutor, imageAnalyzer) }
 
-            imageAnalysis.setAnalyzer(cameraExecutor, imageAnalyzer)
-            val cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
                 cameraProvider.unbindAll()
                 camera = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalysis)
-                preview?.setSurfaceProvider(binding.viewFinder.createSurfaceProvider())
+                preview.setSurfaceProvider(binding.viewFinder.createSurfaceProvider())
             } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
+                Log.e("CameraXBasic", "Use case binding failed", exc)
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
-    }
-
-    private fun aspectRatio(width: Int, height: Int): Int {
-        val previewRatio = ln(max(width, height).toDouble() / min(width, height))
-        if (abs(previewRatio - ln(RATIO_4_3_VALUE))
-            <= abs(previewRatio - ln(RATIO_16_9_VALUE))
-        ) {
-            return AspectRatio.RATIO_4_3
-        }
-        return AspectRatio.RATIO_16_9
-    }
-
-companion object {
-        private const val RATIO_4_3_VALUE = 4.0 / 3.0
-        private const val RATIO_16_9_VALUE = 16.0 / 9.0
-        private const val TAG = "CameraXBasic"
     }
 
 }

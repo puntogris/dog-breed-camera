@@ -2,6 +2,7 @@ package com.puntogris.dogbreedcamera.utils
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.graphics.Rect
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -14,11 +15,11 @@ import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
 
     private val _dogBreedResult = MutableLiveData<String>()
-    val dogBreedResult:LiveData<String> = _dogBreedResult
+    val dogBreedResult = _dogBreedResult
+    val rectOverlayAnalyzer = MutableLiveData<Rect>()
 
     private val localModel = LocalModel.Builder()
         .setAssetFilePath("dog_breed_detection.tflite")
@@ -28,7 +29,7 @@ class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
         CustomObjectDetectorOptions.Builder(localModel)
             .setDetectorMode(CustomObjectDetectorOptions.STREAM_MODE)
             .enableClassification()
-            .setClassificationConfidenceThreshold(0.6f)
+            .setClassificationConfidenceThreshold(0.3f)
             .setMaxPerObjectLabelCount(1)
             .build()
 
@@ -38,15 +39,17 @@ class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
     override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
         if (mediaImage != null){
-            val image = InputImage.fromMediaImage(mediaImage,imageProxy.imageInfo.rotationDegrees)
+            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
             objectDetector.process(image)
                 .addOnFailureListener{
                     Log.d(TAG, it.printStackTrace().toString())
                 }
                 .addOnSuccessListener { listDetectedObjects ->
                     for (detectedObject in listDetectedObjects){
-                        if (detectedObject.labels.isNotEmpty())
+                        if (detectedObject.labels.isNotEmpty()) {
                             _dogBreedResult.value = detectedObject.labels[0].text
+                            rectOverlayAnalyzer.value = detectedObject.boundingBox
+                        }
                     }
                 }.addOnCompleteListener{
                     imageProxy.close()
