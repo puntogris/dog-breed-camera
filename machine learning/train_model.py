@@ -1,14 +1,14 @@
 import tensorflow as tf
 import os
+import sys
 import numpy as np
 import tensorflow_hub as hub
-train_dir = "/home/joaco/Documentos/dog/Images"
-validation_dir = "/home/joaco/Documentos/dog/Images"
 
+train_dir =  os.path.join(sys.path[0], "Images")
+validation_dir = os.path.join(sys.path[0], "Images")
 
 BATCH_SIZE = 64
 IMG_SHAPE = 224 # match image dimension to mobile net input
-
 
 #prevent memorization
 train_image_generator = tf.keras.preprocessing.image.ImageDataGenerator(
@@ -17,7 +17,6 @@ train_image_generator = tf.keras.preprocessing.image.ImageDataGenerator(
 
 validation_image_generator = tf.keras.preprocessing.image.ImageDataGenerator(
     rescale=1./255)
-
 
 train_data_gen = train_image_generator.flow_from_directory(batch_size=BATCH_SIZE,
                                                            directory=train_dir,
@@ -29,11 +28,10 @@ val_data_gen = train_image_generator.flow_from_directory(batch_size=BATCH_SIZE,
                                                            shuffle=False,
                                                            target_size=(IMG_SHAPE, IMG_SHAPE))
 
-# model
-
+# labels
 labels = '\n'.join(sorted(train_data_gen.class_indices.keys()))
 
-with open('dogslabels.txt', 'w') as f:
+with open('model_without_metadata/labels.txt', 'w') as f:
   f.write(labels)
 
 # getting MobileNet
@@ -42,6 +40,7 @@ mobile_net = hub.KerasLayer(URL, input_shape=(IMG_SHAPE, IMG_SHAPE, 3))
 
 mobile_net.trainable = False
 
+# model
 model = tf.keras.models.Sequential([
     mobile_net,
     tf.keras.layers.Dense(120, activation='softmax')
@@ -54,7 +53,7 @@ model.compile(optimizer='adam',
 
 model.summary()
 
-EPOCHS = 35
+EPOCHS = 50
 
 history = model.fit(train_data_gen, 
                          steps_per_epoch=len(train_data_gen), 
@@ -62,14 +61,12 @@ history = model.fit(train_data_gen,
                          validation_data=val_data_gen, 
                          validation_steps=len(val_data_gen))
 
-
-saved_model_dir = 'save/fine_tuning'
+# save model and convert to tflite
+saved_model_dir = 'model_without_metadata/saved_model'
 tf.saved_model.save(model, saved_model_dir)
-
-model.export(export_dir='.', with_metadata=True)
 
 converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir)
 tflite_model = converter.convert()
 
-with open('dog_breed_analyzer.tflite', 'wb') as f:
+with open('model_without_metadata/DogBreedModel.tflite', 'wb') as f:
   f.write(tflite_model)
