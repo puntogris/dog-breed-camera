@@ -52,10 +52,13 @@ class CameraFragment : Fragment() {
 
     private fun disableOverlay() {
         binding.overlayView.visibility = View.GONE
+        binding.overlaySwitch.text = requireContext().getText(R.string.enable_object_detection_overlay)
     }
 
     private fun enableOverlay() {
         binding.overlayView.visibility = View.VISIBLE
+        binding.overlaySwitch.text = requireContext().getText(R.string.disable_object_detection_overlay)
+
     }
 
     private fun startCamera() {

@@ -3,4 +3,6 @@
     <string name="tap_to_open_camera">Tap to open camera</string>
     <string name="warning_experimental_app">*This is experimental, it might not provide 100% accuracy or give incorrect data.</string>
     <string name="enable_object_detection_overlay">Enable object detection overlay</string>
+    <string name="disable_object_detection_overlay">Disable object detection overlay</string>
+
 </resources>

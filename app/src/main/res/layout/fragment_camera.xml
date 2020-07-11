@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/overlaySwitch"
             android:paddingTop="10dp"
             android:checked="true"
@@ -60,7 +60,8 @@
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:text="@string/enable_object_detection_overlay"
+            android:showText="true"
+            android:text="@string/disable_object_detection_overlay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
