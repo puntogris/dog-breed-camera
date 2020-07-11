@@ -12,17 +12,17 @@ import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
+import com.puntogris.dogbreedcamera.model.BreedResult
 import javax.inject.Inject
 import javax.inject.Singleton
 
 class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
 
-    private val _dogBreedResult = MutableLiveData<String>()
-    val dogBreedResult = _dogBreedResult
-    val rectOverlayAnalyzer = MutableLiveData<Rect>()
+    private val _dogBreedResult = MutableLiveData<BreedResult>()
+    val dogBreedResult:LiveData<BreedResult> = _dogBreedResult
 
     private val localModel = LocalModel.Builder()
-        .setAssetFilePath("dog_breed_detection.tflite")
+        .setAssetFilePath("DogBreedModel.tflite")
         .build()
 
     private val customObjectDetectorOptions =
@@ -47,8 +47,9 @@ class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
                 .addOnSuccessListener { listDetectedObjects ->
                     for (detectedObject in listDetectedObjects){
                         if (detectedObject.labels.isNotEmpty()) {
-                            _dogBreedResult.value = detectedObject.labels[0].text
-                            rectOverlayAnalyzer.value = detectedObject.boundingBox
+                            _dogBreedResult.value = BreedResult(
+                                detectedObject.labels[0].text,
+                                detectedObject.boundingBox)
                         }
                     }
                 }.addOnCompleteListener{

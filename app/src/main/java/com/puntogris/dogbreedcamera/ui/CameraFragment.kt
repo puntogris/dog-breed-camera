@@ -26,7 +26,7 @@ class CameraFragment : Fragment() {
     private lateinit var binding: FragmentCameraBinding
     private lateinit var preview: Preview
     private lateinit var camera: Camera
-    private lateinit var cameraExecutor: ExecutorService
+    private val cameraExecutor = Executors.newSingleThreadExecutor()
     @Inject lateinit var imageAnalyzer : ImageAnalyzer
 
     override fun onCreateView(
@@ -34,17 +34,28 @@ class CameraFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_camera, container, false)
-        cameraExecutor = Executors.newSingleThreadExecutor()
+
         startCamera()
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             imageAnalyzerBinding = imageAnalyzer
+            overlaySwitch.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) enableOverlay() else disableOverlay()
+            }
         }
-        imageAnalyzer.rectOverlayAnalyzer.observe(viewLifecycleOwner, Observer {rect ->
-            rect?.let{ binding.view.updateOverlay(it)}
+        imageAnalyzer.dogBreedResult.observe(viewLifecycleOwner, Observer {result ->
+            result?.let{ binding.overlayView.updateOverlay(result.overlayRect)}
         })
 
         return binding.root
+    }
+
+    private fun disableOverlay() {
+        binding.overlayView.visibility = View.GONE
+    }
+
+    private fun enableOverlay() {
+        binding.overlayView.visibility = View.VISIBLE
     }
 
     private fun startCamera() {
@@ -52,12 +63,12 @@ class CameraFragment : Fragment() {
 
         cameraProviderFuture.addListener(Runnable {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val rotation = binding.viewFinder.display.rotation
 
             preview = Preview.Builder()
                 .build()
 
             val metrics = DisplayMetrics().also { binding.viewFinder.display.getRealMetrics(it) }
-            val rotation = binding.viewFinder.display.rotation
 
             val imageAnalysis = ImageAnalysis.Builder()
                 .setTargetRotation(rotation)

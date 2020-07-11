@@ -18,11 +18,15 @@
         <androidx.camera.view.PreviewView
             android:id="@+id/viewFinder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/overlaySwitch">
+
+        </androidx.camera.view.PreviewView>
 
         <TextView
             android:id="@+id/dogBreed"
-            android:background="@drawable/background_round_corrners"
+            android:background="@drawable/transparent_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
@@ -30,7 +34,7 @@
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="27sp"
-            getDataWithoutNull="@{String.valueOf(imageAnalyzerBinding.dogBreedResult)}"
+            getDataWithoutNull="@{String.valueOf(imageAnalyzerBinding.dogBreedResult.label)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,10 +42,25 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <com.puntogris.dogbreedcamera.utils.Overlay
-            android:id="@+id/view"
+            android:id="@+id/overlayView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Switch
+            android:id="@+id/overlaySwitch"
+            android:paddingTop="10dp"
+            android:checked="true"
+            android:background="@drawable/transparent_background"
+            android:textColor="@android:color/white"
+            android:paddingBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="@string/enable_object_detection_overlay"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
