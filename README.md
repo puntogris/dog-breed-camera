@@ -32,6 +32,6 @@ Used:
   * Hilt DI
 
 ## Screenshots
-![](https://github.com/puntogris/dog-breed-camera/blob/master/screenshots/1.png&d=44)
+![](https://github.com/puntogris/dog-breed-camera/blob/master/screenshots/1.png&s=44)
 ![](https://github.com/puntogris/dog-breed-camera/blob/master/screenshots/2.webp)
 ![](https://github.com/puntogris/dog-breed-camera/blob/master/screenshots/3.webp)
