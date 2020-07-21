@@ -26,7 +26,7 @@ class CameraFragment : Fragment() {
     private lateinit var binding: FragmentCameraBinding
     private lateinit var preview: Preview
     private lateinit var camera: Camera
-    private val cameraExecutor = Executors.newSingleThreadExecutor()
+    private lateinit var cameraExecutor: ExecutorService
     @Inject lateinit var imageAnalyzer : ImageAnalyzer
 
     override fun onCreateView(
@@ -36,6 +36,7 @@ class CameraFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_camera, container, false)
 
         startCamera()
+        cameraExecutor = Executors.newSingleThreadExecutor()
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             imageAnalyzerBinding = imageAnalyzer

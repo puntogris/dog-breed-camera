@@ -5,17 +5,17 @@ import pathlib
 import matplotlib.pyplot as plt
 
 # Get input and output tensors.
-interpreter = tf.lite.Interpreter(model_path="/home/joaco/Documentos/dog/model_with_metadata/dog_breed_analyzer.tflite")
+interpreter = tf.lite.Interpreter(model_path="/home/joaco/Documentos/AndroidStudioProjects/dog-breed-camera/machine learning/model_without_metadata/DogBreedModel.tflite")
 
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
 interpreter.allocate_tensors()
 
-labels_file = open('dogslabels.txt', 'r')
+labels_file = open('model_without_metadata/labels.txt', 'r')
 labels = labels_file.read().splitlines()
 
-for file in pathlib.Path("/home/joaco/Documentos/dog/test/").iterdir():
+for file in pathlib.Path("/home/joaco/Documentos/AndroidStudioProjects/dog-breed-camera/machine learning/test images/").iterdir():
     print("-----------------------------------------------------------")
     # read and resize the image
     img = cv2.imread(r"{}".format(file.resolve()))
@@ -35,15 +35,17 @@ for file in pathlib.Path("/home/joaco/Documentos/dog/test/").iterdir():
 
     #print("For file {}, the output is {}".format(file.stem, dog_breed))
     result = np.argpartition(final_data, -5)[-5:]
-    print(result)
 
-    for i in range(5):
+    index = np.argmax(final_data)
+    dog_breed = labels[index]
+    print(dog_breed)
+  #  for i in range(5):
     # index = np.argmax(final_data)
-        dog_breed = labels[result[i]]
-        score = float(final_data[result[i]]) *100
+   #     dog_breed = labels[result[i]]
+    #    score = float(final_data[result[i]]) *100
     
-        print("for breed {}, score = {}".format(dog_breed, score))
-    print(np.around(final_data, 3))
+     #   print("for breed {}, score = {}".format(dog_breed, score))
+   # print(np.around(final_data, 3))
 
 
 labels_file.close()

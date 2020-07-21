@@ -1,8 +1,7 @@
-package com.puntogris.dogbreedcamera.utils
+package com.puntogris.dogbreedcamera.ui
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
@@ -21,7 +20,6 @@ class Overlay(context: Context, attributeSet: AttributeSet) : View(context, attr
         }else {
             context.resources.getColor(R.color.colorAccent)
         }
-
         strokeWidth = 10f
         style = Paint.Style.STROKE
     }
