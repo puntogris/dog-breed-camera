@@ -73,7 +73,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/openCameraTap"
             app:layout_constraintTop_toTopOf="@+id/openCameraTap"
-            app:srcCompat="@drawable/ic_dog_pawn" />
+            app:srcCompat="@drawable/ic_dog_pawn"
+            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

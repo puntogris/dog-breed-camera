@@ -1,9 +1,6 @@
-package com.puntogris.dogbreedcamera.utils
+package com.puntogris.dogbreedcamera.analizer
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
-import android.graphics.Rect
-import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.LiveData
@@ -13,10 +10,10 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
 import com.puntogris.dogbreedcamera.model.BreedResult
+import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
-class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
+class ImageAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
 
     private val _dogBreedResult = MutableLiveData<BreedResult>()
     val dogBreedResult:LiveData<BreedResult> = _dogBreedResult
@@ -35,17 +32,17 @@ class ImageAnalyzer @Inject constructor():ImageAnalysis.Analyzer {
 
     private val objectDetector = ObjectDetection.getClient(customObjectDetectorOptions)
 
-    @SuppressLint("UnsafeExperimentalUsageError")
+    @SuppressLint("UnsafeExperimentalUsageError", "UnsafeOptInUsageError")
     override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
         if (mediaImage != null){
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
             objectDetector.process(image)
-                .addOnFailureListener{
-                    Log.d(TAG, it.printStackTrace().toString())
+                .addOnFailureListener {
+                    Timber.d(it.printStackTrace().toString())
                 }
-                .addOnSuccessListener { listDetectedObjects ->
-                    for (detectedObject in listDetectedObjects){
+                .addOnSuccessListener {
+                    for (detectedObject in it){
                         if (detectedObject.labels.isNotEmpty()) {
                             _dogBreedResult.value = BreedResult(
                                 detectedObject.labels[0].text,

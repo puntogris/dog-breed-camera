@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="imageAnalyzerBinding"
-            type="com.puntogris.dogbreedcamera.utils.ImageAnalyzer" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,20 +32,20 @@
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="27sp"
-            getDataWithoutNull="@{String.valueOf(imageAnalyzerBinding.dogBreedResult.label)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/viewFinder"
             app:layout_constraintVertical_bias="1.0" />
 
-        <com.puntogris.dogbreedcamera.ui.Overlay
+        <com.puntogris.dogbreedcamera.ui.widget.CameraOverlay
             android:id="@+id/overlayView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/overlaySwitch"

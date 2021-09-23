@@ -4,4 +4,5 @@
     <string name="warning_experimental_app">*This is experimental, it might not provide 100% accuracy or give incorrect data.</string>
     <string name="enable_object_detection_overlay">Enable object detection overlay</string>
     <string name="disable_object_detection_overlay">Disable object detection overlay</string>
+    <string name="toast_camera_permission_required">We need access to the camera to run the app.</string>
 </resources>
