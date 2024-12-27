@@ -3,24 +3,22 @@ package com.puntogris.dogbreedcamera.analizer
 import android.annotation.SuppressLint
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.objects.ObjectDetection
 import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
 import com.puntogris.dogbreedcamera.model.BreedResult
 import timber.log.Timber
-import javax.inject.Inject
 
-class ImageAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
+class ImageAnalyzer(
+    private val listener: BreedResultListener
+) : ImageAnalysis.Analyzer {
 
-    private val _dogBreedResult = MutableLiveData<BreedResult>()
-    val dogBreedResult:LiveData<BreedResult> = _dogBreedResult
+    interface BreedResultListener {
+        fun onBreedResult(result: BreedResult)
+    }
 
-    private val localModel = LocalModel.Builder()
-        .setAssetFilePath("DogBreedModel.tflite")
-        .build()
+    private val localModel = LocalModel.Builder().setAssetFilePath("DogBreedModel.tflite").build()
 
     private val customObjectDetectorOptions =
         CustomObjectDetectorOptions.Builder(localModel)
@@ -34,24 +32,26 @@ class ImageAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
 
     @SuppressLint("UnsafeExperimentalUsageError", "UnsafeOptInUsageError")
     override fun analyze(imageProxy: ImageProxy) {
-        val mediaImage = imageProxy.image
-        if (mediaImage != null){
-            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-            objectDetector.process(image)
-                .addOnFailureListener {
-                    Timber.d(it.printStackTrace().toString())
-                }
-                .addOnSuccessListener {
-                    for (detectedObject in it){
-                        if (detectedObject.labels.isNotEmpty()) {
-                            _dogBreedResult.value = BreedResult(
-                                detectedObject.labels[0].text,
-                                detectedObject.boundingBox)
-                        }
+        val mediaImage = imageProxy.image ?: return
+        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+
+        objectDetector.process(image)
+            .addOnFailureListener {
+                Timber.d(it.printStackTrace().toString())
+            }
+            .addOnSuccessListener {
+                for (detectedObject in it) {
+                    if (detectedObject.labels.isNotEmpty()) {
+                        listener.onBreedResult(
+                            BreedResult(
+                                detectedObject.labels[0].text, detectedObject.boundingBox
+                            )
+                        )
                     }
-                }.addOnCompleteListener{
-                    imageProxy.close()
                 }
-        }
+            }
+            .addOnCompleteListener {
+                imageProxy.close()
+            }
     }
 }
